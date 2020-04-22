@@ -603,18 +603,16 @@ class Invoice
 
                 default:
                     // Ignore empty values
-                    if ($value == '') {
-                        continue;
-                    }
-
-                    $methodName = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
-                    if (!method_exists(__CLASS__, $methodName)) {
-                        if (Teamleader::DEBUG) {
-                            var_dump($key, $value);
-                            throw new Exception('Unknown method (' . $methodName . ')');
+                    if ($value != '') {
+                        $methodName = 'set'.str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
+                        if (!method_exists(__CLASS__, $methodName)) {
+                            if (Teamleader::DEBUG) {
+                                var_dump($key, $value);
+                                throw new Exception('Unknown method ('.$methodName.')');
+                            }
+                        } else {
+                            call_user_func(array($invoice, $methodName), $value);
                         }
-                    } else {
-                        call_user_func(array($invoice, $methodName), $value);
                     }
             }
         }
